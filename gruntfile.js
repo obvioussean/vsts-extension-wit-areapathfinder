@@ -1,5 +1,19 @@
 ﻿module.exports = function (grunt) {
     grunt.initConfig({
+        copy: {
+            scripts: {
+                files: [{
+                    expand: true,
+                    flatten: true,
+                    src: ["node_modules/vss-web-extension-sdk/lib/VSS.SDK.min.js"],
+                    dest: "scripts",
+                    filter: "isFile"
+                }]
+            }
+        },
+        typings: {
+            install: {}
+        },
         ts: {
             build: {
                 tsconfig: true
@@ -9,40 +23,44 @@
             }
         },
         exec: {
-            package: {
-                command: "tfx extension create --manifest-globs vss-extension.json",
+            package_dev: {
+                command: "tfx extension create --manifest-globs vss-extension.json --overrides-file configs/dev.json",
                 stdout: true,
                 stderr: true
             },
-            publish: {
-                command: "tfx extension publish --service-url https://marketplace.visualstudio.com --manifest-globs vss-extension.json",
+            package_release: {
+                command: "tfx extension create --manifest-globs vss-extension.json --overrides-file configs/release.json",
+                stdout: true,
+                stderr: true
+            },
+            publish_dev: {
+                command: "tfx extension publish --service-url https://marketplace.visualstudio.com --manifest-globs vss-extension.json --overrides-file configs/dev.json",
+                stdout: true,
+                stderr: true
+            },
+            publish_release: {
+                command: "tfx extension publish --service-url https://marketplace.visualstudio.com --manifest-globs vss-extension.json --overrides-file configs/release.json",
                 stdout: true,
                 stderr: true
             }
         },
-        copy: {
-            scripts: {
-                files: [{
-                    expand: true, 
-                    flatten: true, 
-                    src: ["node_modules/vss-web-extension-sdk/lib/VSS.SDK.min.js"], 
-                    dest: "dist",
-                    filter: "isFile" 
-                }]
-            }
-        },
-        
-        clean: ["scripts/**/*.js", "*.vsix", "dist"]
-    });
-    
-    grunt.loadNpmTasks("grunt-ts");
-    grunt.loadNpmTasks("grunt-exec");
-    grunt.loadNpmTasks("grunt-contrib-copy");
-    grunt.loadNpmTasks('grunt-contrib-clean');
 
+
+        clean: ["node_modules", "typings", "*.vsix", "scripts/*.js"]
+    });
+
+    grunt.loadNpmTasks("grunt-contrib-clean");
+    grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks("grunt-exec");
+    grunt.loadNpmTasks("grunt-ts");
+    grunt.loadNpmTasks("grunt-typings");
+
+    grunt.registerTask("install", ["typings:install"]);
     grunt.registerTask("build", ["ts:build", "copy:scripts"]);
-    grunt.registerTask("package", ["build", "exec:package"]);
-    grunt.registerTask("publish", ["default", "exec:publish"]);        
-    
-    grunt.registerTask("default", ["package"]);
+    grunt.registerTask("package-dev", ["build", "exec:package_dev"]);
+    grunt.registerTask("package-release", ["build", "exec:package_release"]);
+    grunt.registerTask("publish-dev", ["package-dev", "exec:publish_dev"]);        
+    grunt.registerTask("publish-release", ["package-release", "exec:publish_release"]);    
+
+    grunt.registerTask("default", ["package-dev"]);
 };

@@ -1,18 +1,9 @@
 {
     "compilerOptions": {
         "module": "amd",
-        "sourceMap": false,
-        "rootDir": "./scripts",
-        "outDir": "./dist"
+        "sourceMap": false
     },
-    "filesGlob": [
-        "./scripts/**/*.ts",
-        "./typings/index.d.ts"
-    ],
-    "files": [
-        "scripts/app.ts",
-        "scripts/dialog.ts",
-        "scripts/models.ts",
-        "typings/index.d.ts"
+    "exclude": [
+        "node_modules"
     ]
 }

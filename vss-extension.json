@@ -1,12 +1,11 @@
 {
     "manifestVersion": 1,
-    "id": "vsts-extension-wit-teamfinder",
+    "id": "vsts-extension-wit-areapathfinder",
     "version": "0.1.1",
-    "name": "Team Finder Custom Control",
+    "name": "Area Path Finder",
     "scopes": [ "vso.work", "vso.work_write" ],
-    "description": "Find people based on the current area path",
+    "description": "Finds area paths related to a person by the teams they are a member of",
     "publisher": "seanferguson",
-    "public": false,
     "icons": {
         "default": "img/logo.png"
     },
@@ -16,36 +15,24 @@
         }
     ],
     "tags": [
-        "Work"
+        "Work Item"
     ],
     "content": {
         "details": {
-            "path": "details.md"
+            "path": "README.md"
         }
     },
     "links": {
-        "home": {
-            "uri": "https://bit.ly"
-        },
-        "getstarted": {
-            "uri": "https://bit.ly"
-        },
         "learn": {
-            "uri": "https://bit.ly"
+            "uri": "https://github.com/sferg-msft/vsts-extension-wit-areapathfinder"
         },
         "support": {
-            "uri": "https://bit.ly"
-        },
-        "repository": {
-            "uri": "https://bit.ly"
-        },
-        "issues": {
-            "uri": "https://bit.ly"
+            "uri": "https://github.com/sferg-msft/vsts-extension-wit-areapathfinder/issues"
         }
     },
     "branding": {
-        "color": "rgb(220, 235, 252)",
-        "theme": "light"
+        "color": "#5C2D91",
+        "theme": "dark"
     },
     "files": [
         {
@@ -53,7 +40,7 @@
             "addressable": true
         },
         {
-            "path": "dist",
+            "path": "scripts",
             "addressable": true
         },
         {
@@ -66,18 +53,18 @@
         }
     ],
     "categories": [
-        "Integrate"
+        "Plan and track"
     ],
     "contributions": [
         {
-            "id": "teamfinder-action",
+            "id": "action",
             "type": "ms.vss-web.action-provider",
             "description": "",
             "targets": [
                 "ms.vss-work-web.work-item-context-menu"
             ],
             "properties": {
-                "group": "teamfinder",
+                "group": "areapathfinder",
                 "uri": "index.html"
             }
         },
