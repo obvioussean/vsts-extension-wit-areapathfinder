@@ -1,0 +1,94 @@
+{
+    "manifestVersion": 1,
+    "id": "vsts-extension-wit-teamfinder",
+    "version": "0.1.1",
+    "name": "Team Finder Custom Control",
+    "scopes": [ "vso.work", "vso.work_write" ],
+    "description": "Find people based on the current area path",
+    "publisher": "seanferguson",
+    "public": false,
+    "icons": {
+        "default": "img/logo.png"
+    },
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "tags": [
+        "Work"
+    ],
+    "content": {
+        "details": {
+            "path": "details.md"
+        }
+    },
+    "links": {
+        "home": {
+            "uri": "https://bit.ly"
+        },
+        "getstarted": {
+            "uri": "https://bit.ly"
+        },
+        "learn": {
+            "uri": "https://bit.ly"
+        },
+        "support": {
+            "uri": "https://bit.ly"
+        },
+        "repository": {
+            "uri": "https://bit.ly"
+        },
+        "issues": {
+            "uri": "https://bit.ly"
+        }
+    },
+    "branding": {
+        "color": "rgb(220, 235, 252)",
+        "theme": "light"
+    },
+    "files": [
+        {
+            "path": "img",
+            "addressable": true
+        },
+        {
+            "path": "dist",
+            "addressable": true
+        },
+        {
+            "path": "index.html",
+            "addressable": true
+        },
+        {
+            "path": "dialog.html",
+            "addressable": true
+        }
+    ],
+    "categories": [
+        "Integrate"
+    ],
+    "contributions": [
+        {
+            "id": "teamfinder-action",
+            "type": "ms.vss-web.action-provider",
+            "description": "",
+            "targets": [
+                "ms.vss-work-web.work-item-context-menu"
+            ],
+            "properties": {
+                "group": "teamfinder",
+                "uri": "index.html"
+            }
+        },
+        {
+            "id": "dialog",
+            "type": "ms.vss-web.control",
+            "description": "The content to be displayed in the dialog",
+            "targets": [],
+            "properties": {
+                "uri": "dialog.html"
+            }
+        }
+    ]
+}
