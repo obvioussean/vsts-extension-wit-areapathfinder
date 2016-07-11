@@ -1,6 +1,8 @@
 import Core = require("TFS/Core/RestClient");
 import Work = require("TFS/Work/RestClient");
 import Controls = require("VSS/Controls");
+import Utils_Array = require("VSS/Utils/Array");
+import Utils_String = require("VSS/Utils/String");
 import VSS_StatusIndicator = require("VSS/Controls/StatusIndicator");
 import {IdentityRef} from "VSS/WebApi/Contracts";
 import {WebApiTeam, TeamContext} from "TFS/Core/Contracts";
@@ -12,9 +14,11 @@ import Q = require("q");
 
 export interface ITeamFinderDialogConfiguration {
     project: string;
+    areaPathChanged: (areaPath: string) => void;
 }
 
 export class TeamFinderDialog {
+    private configuration: ITeamFinderDialogConfiguration;
     private project: string;
     private teams: WebApiTeam[];
     private teamMembers: IDictionaryStringTo<IdentityRef[]>;
@@ -24,13 +28,11 @@ export class TeamFinderDialog {
     private identityIdToIdentityRefMapping: IDictionaryStringTo<IdentityRef> = {};
     private identities: string[] = [];
 
-    private callbacks: Function[] = [];
-
     private areaPathCombo: Combo;
 
     public initialize() {
-        let configuration = VSS.getConfiguration();
-        this.project = configuration.properties.project;
+        this.configuration = VSS.getConfiguration();
+        this.project = this.configuration.project;
 
         let container = $("#container");
         let parentHeight = container.parentsUntil("#document").parent().height();
@@ -77,10 +79,6 @@ export class TeamFinderDialog {
         });
     }
 
-    public areaPathChanged(callback: (areaPath: string) => void) {
-        this.callbacks.push(callback);
-    }
-
     public getSelectedAreaPath(): string {
         return this.areaPathCombo.getValue<string>();
     }
@@ -99,10 +97,10 @@ export class TeamFinderDialog {
                 else if ($.inArray(team, this.identityToTeamMapping[comboDisplayName]) == -1) {
                     this.identityToTeamMapping[comboDisplayName].push(team);
                 }
-
-                console.log(`team: ${team}, member: ${member.uniqueName}`);
             });
         });
+
+        Utils_Array.sortIfNotSorted<string>(this.identities, Utils_String.localeIgnoreCaseComparer);
     }
 
     private createControls() {
@@ -118,10 +116,12 @@ export class TeamFinderDialog {
                 let identity = identityCombo.getValue<string>();
                 let teams = this.identityToTeamMapping[identity];
 
-                let paths = [];
+                let paths: string[] = [];
                 teams.forEach((team) => {
                     paths = paths.concat(this.areaPaths[team]);
                 });
+
+                Utils_Array.sortIfNotSorted<string>(paths, Utils_String.localeIgnoreCaseComparer);
 
                 this.areaPathCombo.setSource(paths);
             }
@@ -137,9 +137,9 @@ export class TeamFinderDialog {
             source: [],
             indexChanged: (index: number) => {
                 let areaPath = this.areaPathCombo.getText();
-                this.callbacks.forEach((callback) => {
-                    callback(areaPath);
-                });
+                if ($.isFunction(this.configuration.areaPathChanged)) {
+                    this.configuration.areaPathChanged(areaPath);
+                }
             }
         };
 
@@ -157,7 +157,7 @@ export class TeamService {
         let deferred = Q.defer<WebApiTeam[]>();
         let client = Core.getClient();
         let teams: WebApiTeam[] = [];
-        let top: number = 5;
+        let top: number = 200;
 
         let getTeamDelegate = (project: string, skip: number) => {
             client.getTeams(project, top, skip).then((items: WebApiTeam[]) => {

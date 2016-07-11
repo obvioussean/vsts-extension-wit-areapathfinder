@@ -22,7 +22,7 @@ function showDialog() {
         let dialogInstance: TeamFinderDialog;
         let dialogOptions: IHostDialogOptions = {
             title: "Area Path Finder",
-            width: 400,
+            width: 600,
             height: 400,
             getDialogResult: () => {
                 return dialogInstance.getSelectedAreaPath();
@@ -50,24 +50,20 @@ function showDialog() {
             }
 
             let properties: ITeamFinderDialogConfiguration = {
-                "project": project
-            };
-            let contributionConfig = {
-                properties: properties
+                project: project,
+                areaPathChanged: (areaPath: string) => {
+                    dialog.updateOkButton(true);
+                }
             };
 
             dialogService.openDialog(
                 extInfo.publisherId + "." + extInfo.extensionId + ".dialog",
                 dialogOptions,
-                contributionConfig).then((externalDialog: IExternalDialog) => {
+                properties).then((externalDialog: IExternalDialog) => {
                     dialog = externalDialog;
                     dialog.getContributionInstance("dialog").then((instance: TeamFinderDialog) => {
                         dialogInstance = instance;
                         dialogInstance.initialize();
-
-                        dialogInstance.areaPathChanged((areaPath: string) => {
-                            dialog.updateOkButton(true);
-                        });
                     }, (reason) => {
                         debugger;
                     });
