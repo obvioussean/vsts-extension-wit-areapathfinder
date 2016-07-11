@@ -1,18 +1,14 @@
-import {IdentityRef} from "VSS/WebApi/Contracts";
-//import {WebApiTeam} from "TFS/Core/Contracts";
-import {Combo, IComboOptions} from "VSS/Controls/Combos";
-import Controls = require("VSS/Controls");
-import {IdentityPickerDropdownControl, IdentityPickerSearchControl, IIdentityPickerSearchOptions, IIdentityPickerDropdownOptions} from "VSS/Identities/Picker/Controls";
-import Q = require("q");
-
-//import {IdentityRef} from "VSS/WebApi/Contracts";
-import {WebApiTeam, TeamContext} from "TFS/Core/Contracts";
-import {TeamFieldValues} from "TFS/Work/Contracts";
 import Core = require("TFS/Core/RestClient");
 import Work = require("TFS/Work/RestClient");
-//import Q = require("q");
+import Controls = require("VSS/Controls");
+import VSS_StatusIndicator = require("VSS/Controls/StatusIndicator");
+import {IdentityRef} from "VSS/WebApi/Contracts";
+import {WebApiTeam, TeamContext} from "TFS/Core/Contracts";
+import {TeamFieldValues} from "TFS/Work/Contracts";
+import {Combo, IComboOptions} from "VSS/Controls/Combos";
+import {IdentityPickerDropdownControl, IdentityPickerSearchControl, IIdentityPickerSearchOptions, IIdentityPickerDropdownOptions} from "VSS/Identities/Picker/Controls";
 import {ITeamAreaPaths, ITeamMembers} from "models";
-//import {TeamService} from "teamService";
+import Q = require("q");
 
 export interface ITeamFinderDialogConfiguration {
     project: string;
@@ -37,27 +33,45 @@ export class TeamFinderDialog {
         this.project = configuration.properties.project;
         console.log(`project: ${this.project}`);
 
+        let container = $("#container");
+        let parentHeight = container.parentsUntil("#document").parent().height();
+
+        container.height(parentHeight);
+
+        let statusIndicatorContainer = $("<div />").attr("id", "status-indicator-container").appendTo(container);
+        statusIndicatorContainer.css("display", "inline");
+        statusIndicatorContainer.height(parentHeight);
+
+        let statusIndicator = Controls.create(VSS_StatusIndicator.StatusIndicator, statusIndicatorContainer, {
+            center: true,
+            imageClass: "big-status-progress",
+            message: "Loading teams..."
+        });
+
+        statusIndicator.start();
+
         let teamService = new TeamService();
 
         Q.fcall(() => {
         }).then(() => {
-            console.log(`gettings the teams`);
-
             return teamService.getTeams(this.project);
         }).then((teams: WebApiTeam[]) => {
-            console.log(`found ${teams.length} teams`);
             this.teams = teams;
+
+            statusIndicator.setMessage("Loading team members...");
 
             return teamService.getAllTeamMembers(this.project, this.teams);
         }).then((teamMembers: IDictionaryStringTo<IdentityRef[]>) => {
-            console.log("loaded team members");
             this.teamMembers = teamMembers;
+
+            statusIndicator.setMessage("Loading team area paths...");
 
             return teamService.getAllTeamAreaPaths(this.project, this.teams);
         }).then((areaPaths: IDictionaryStringTo<string[]>) => {
-            console.log("loaded area paths");
             this.areaPaths = areaPaths;
-
+            this.buildIdentityMaps();
+            statusIndicator.complete();
+            
             this.createControls();
         }).catch((reason) => {
             debugger;
@@ -72,7 +86,7 @@ export class TeamFinderDialog {
         return this.areaPathCombo.getValue<string>();
     }
 
-    private createControls() {
+    private buildIdentityMaps() {
         $.each(this.teamMembers, (team: string, members: IdentityRef[]) => {
             $.each(members, (index, member) => {
                 let comboDisplayName = `${member.displayName} <${member.uniqueName}>`;
@@ -90,9 +104,11 @@ export class TeamFinderDialog {
                 console.log(`team: ${team}, member: ${member.uniqueName}`);
             });
         });
+    }
 
+    private createControls() {
         let identityComboContainer = $("<div />").attr("id", "identity-combo-container").appendTo("#container");
-        $("<label />").text("User: ").appendTo(identityComboContainer);
+        $("<label />").text("Team Member: ").appendTo(identityComboContainer);
 
         let identityComboOptions: IComboOptions = {
             mode: "drop",
@@ -135,9 +151,9 @@ export class TeamFinderDialog {
 export class TeamService {
 
     public TeamService() {
-        
+
     }
-    
+
     public getTeams(project: string): IPromise<WebApiTeam[]> {
         let deferred = Q.defer<WebApiTeam[]>();
         let client = Core.getClient();
