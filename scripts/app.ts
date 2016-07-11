@@ -6,6 +6,8 @@ var actionProvider = {
     getMenuItems: (context) => {
         return [<IContributedMenuItem>{
             title: "Area Path Finder",
+            icon: "img/icon-light.png",
+            text: "Area Path Finder",
             action: (actionContext) => {
                 showDialog();
             }

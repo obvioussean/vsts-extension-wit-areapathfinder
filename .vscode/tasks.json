@@ -10,7 +10,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "taskName": "publish",
+            "taskName": "publish-dev",
             "isBuildCommand": false,
             "problemMatcher": "$msCompile"
         }

@@ -31,7 +31,6 @@ export class TeamFinderDialog {
     public initialize() {
         let configuration = VSS.getConfiguration();
         this.project = configuration.properties.project;
-        console.log(`project: ${this.project}`);
 
         let container = $("#container");
         let parentHeight = container.parentsUntil("#document").parent().height();
@@ -57,13 +56,11 @@ export class TeamFinderDialog {
             return teamService.getTeams(this.project);
         }).then((teams: WebApiTeam[]) => {
             this.teams = teams;
-
             statusIndicator.setMessage("Loading team members...");
 
             return teamService.getAllTeamMembers(this.project, this.teams);
         }).then((teamMembers: IDictionaryStringTo<IdentityRef[]>) => {
             this.teamMembers = teamMembers;
-
             statusIndicator.setMessage("Loading team area paths...");
 
             return teamService.getAllTeamAreaPaths(this.project, this.teams);
@@ -71,9 +68,11 @@ export class TeamFinderDialog {
             this.areaPaths = areaPaths;
             this.buildIdentityMaps();
             statusIndicator.complete();
-            
+
             this.createControls();
         }).catch((reason) => {
+            statusIndicator.complete();
+            console.error(reason);
             debugger;
         });
     }

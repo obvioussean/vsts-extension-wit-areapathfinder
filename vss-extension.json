@@ -1,21 +1,30 @@
 {
     "manifestVersion": 1,
     "id": "vsts-extension-wit-areapathfinder",
-    "version": "0.1.2",
+    "version": "1.0.0",
     "name": "Area Path Finder",
-    "scopes": [ "vso.work", "vso.work_write" ],
+    "scopes": [
+        "vso.work",
+        "vso.work_write"
+    ],
     "description": "Finds area paths related to a person by the teams they are a member of",
     "publisher": "seanferguson",
     "icons": {
         "default": "img/logo.png"
     },
+    "screenshots": [
+        {
+            "path": "img/dialogexample.png"
+        }
+    ],
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
         }
     ],
     "tags": [
-        "Work Item"
+        "Work Item",
+        "Team"
     ],
     "content": {
         "details": {
