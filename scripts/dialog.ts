@@ -122,7 +122,8 @@ export class TeamFinderDialog {
                 });
 
                 Utils_Array.sortIfNotSorted<string>(paths, Utils_String.localeIgnoreCaseComparer);
-
+                
+                this.areaPathCombo.setText("");
                 this.areaPathCombo.setSource(paths);
             }
         };
