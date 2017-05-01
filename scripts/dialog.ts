@@ -4,12 +4,12 @@ import Controls = require("VSS/Controls");
 import Utils_Array = require("VSS/Utils/Array");
 import Utils_String = require("VSS/Utils/String");
 import VSS_StatusIndicator = require("VSS/Controls/StatusIndicator");
-import {IdentityRef} from "VSS/WebApi/Contracts";
-import {WebApiTeam, TeamContext} from "TFS/Core/Contracts";
-import {TeamFieldValues} from "TFS/Work/Contracts";
-import {Combo, IComboOptions} from "VSS/Controls/Combos";
-import {IdentityPickerDropdownControl, IdentityPickerSearchControl, IIdentityPickerSearchOptions, IIdentityPickerDropdownOptions} from "VSS/Identities/Picker/Controls";
-import {ITeamAreaPaths, ITeamMembers} from "models";
+import { IdentityRef } from "VSS/WebApi/Contracts";
+import { WebApiTeam, TeamContext } from "TFS/Core/Contracts";
+import { TeamFieldValues } from "TFS/Work/Contracts";
+import { Combo, IComboOptions } from "VSS/Controls/Combos";
+import { IdentityPickerDropdownControl, IdentityPickerSearchControl, IIdentityPickerSearchOptions, IIdentityPickerDropdownOptions } from "VSS/Identities/Picker/Controls";
+import { ITeamAreaPaths, ITeamMembers } from "./models";
 import Q = require("q");
 
 export interface ITeamFinderDialogConfiguration {
@@ -122,7 +122,7 @@ export class TeamFinderDialog {
                 });
 
                 Utils_Array.sortIfNotSorted<string>(paths, Utils_String.localeIgnoreCaseComparer);
-                
+
                 this.areaPathCombo.setText("");
                 this.areaPathCombo.setSource(paths);
             }

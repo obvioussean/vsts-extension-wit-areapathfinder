@@ -1,9 +1,12 @@
 {
     "compilerOptions": {
         "module": "amd",
-        "sourceMap": false
-    },
-    "exclude": [
-        "node_modules"
-    ]
+        "sourceMap": false,
+        "moduleResolution": "node",
+        "types": [
+            "vss-web-extension-sdk",
+            "jquery",
+            "q"
+        ]
+    }
 }

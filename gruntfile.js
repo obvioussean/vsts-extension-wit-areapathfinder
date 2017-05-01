@@ -24,12 +24,12 @@
         },
         exec: {
             package_dev: {
-                command: "tfx extension create --manifest-globs vss-extension.json --overrides-file configs/dev.json",
+                command: "tfx extension create --rev-version --manifest-globs vss-extension.json --overrides-file configs/dev.json",
                 stdout: true,
                 stderr: true
             },
             package_release: {
-                command: "tfx extension create --manifest-globs vss-extension.json --overrides-file configs/release.json",
+                command: "tfx extension create --rev-version --manifest-globs vss-extension.json --overrides-file configs/release.json",
                 stdout: true,
                 stderr: true
             },

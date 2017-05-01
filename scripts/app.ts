@@ -1,17 +1,10 @@
-import {IWorkItemFormService, WorkItemFormService} from "TFS/WorkItemTracking/Services";
-import {TeamFinderDialog, ITeamFinderDialogConfiguration} from "dialog";
+import { IWorkItemFormService, WorkItemFormService } from "TFS/WorkItemTracking/Services";
+import { TeamFinderDialog, ITeamFinderDialogConfiguration } from "./dialog";
 import Q = require("q");
 
 var actionProvider = {
-    getMenuItems: (context) => {
-        return [<IContributedMenuItem>{
-            title: "Area Path Finder",
-            icon: "img/icon-light.png",
-            text: "Area Path Finder",
-            action: (actionContext) => {
-                showDialog();
-            }
-        }];
+    execute: (context) => {
+        showDialog();
     }
 };
 
@@ -72,5 +65,5 @@ function showDialog() {
     });
 }
 
-// Register context menu action provider
+// register context menu action provider
 VSS.register(VSS.getContribution().id, actionProvider);

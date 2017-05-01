@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "vsts-extension-wit-areapathfinder",
-    "version": "1.0.2",
+    "version": "1.0.13",
     "name": "Area Path Finder",
     "scopes": [
         "vso.work",
@@ -67,12 +67,14 @@
     "contributions": [
         {
             "id": "action",
-            "type": "ms.vss-web.action-provider",
+            "type": "ms.vss-web.action",
             "description": "",
             "targets": [
                 "ms.vss-work-web.work-item-context-menu"
             ],
             "properties": {
+                "text": "Area Path Finder",
+                "icon": "img/icon-light.png",
                 "group": "areapathfinder",
                 "uri": "index.html"
             }
